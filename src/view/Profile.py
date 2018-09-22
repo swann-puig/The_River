@@ -19,7 +19,7 @@ class Profile():
         self.textColor = pygame.Color("0xffffff") #RRGGBB
         #------------------------------ TITLE ------------------------------
         self.fontTitle = pygame.font.SysFont("times", 36 , 1)
-        self.title = self.fontTitle.render("Profil:", 1, self.textColor)
+        self.title = self.fontTitle.render("Profile:", 1, self.textColor)
         
         #------------------------------ TEXT ------------------------------
         self.fontText = pygame.font.SysFont("times", 24)
@@ -28,7 +28,7 @@ class Profile():
         self.textAction = self.fontText.render("Action Point: ", 1, self.textColor)
         
         #------------------------------ CONFIG ------------------------------
-        self.inter_line = self.textLife.get_height() + 6
+        self.inter_line = self.textAction.get_height() + 6
         self.padx, self.pady = 5, 5
         
         if (background_path == None):

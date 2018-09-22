@@ -100,8 +100,6 @@ class Board_game(Graphic_object):
         if self.can_move_card(card, pos):
             old_index = self.get_index(card.past_rect.x, card.past_rect.y)
             index = self.get_index(pos[0], pos[1])
-            print("old:",old_index)
-            print("new:",index)
             card.set_position(self.column[index[1]], self.raw[index[0]])
             if old_index in self.box_taken: self.box_taken.remove(old_index)
             self.box_taken.append(index)

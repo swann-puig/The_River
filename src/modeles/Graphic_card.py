@@ -34,11 +34,14 @@ class Graphic_card(Graphic_object):
         return self.posed
     
     def mouse_pressed(self, event):
-        super().mouse_pressed(event)
         if (self.rect.collidepoint(event.pos)):
             if (not self.posed):
-                self.c.display_details(self, event.pos, remove=True)
+                if (self.c.is_display_priority(self, event.pos)):
+                    super().mouse_pressed(event)
+                    self.c.select(self)
+                    self.c.display_details(self, event.pos, remove=True)
             else:
+                super().mouse_pressed(event)
                 self.c.display_details(self, event.pos)
         
     def mouse_released(self, event):
@@ -47,13 +50,13 @@ class Graphic_card(Graphic_object):
             if self.c.board.pose_card(self, (self.rect.x - self.offset_x, self.rect.y - self.offset_y)):
                 self.owner.hand.remove(self)
                 self.posed = True
+                self.c.place_card_on_board(self)
                 return True
         elif (self.posed):
             self.c.move_card_posed(self, (self.rect.x - self.offset_x, self.rect.y - self.offset_y))
             return True
         
         self.c.card_released_in_wrong_place(self)
-            
         
     def mouse_motion(self, event):
         if (self.drag):

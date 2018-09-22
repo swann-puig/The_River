@@ -23,6 +23,8 @@ class View(object):
         cut = str(get_monitors()[0]).split("(")[1].split("x")
         self.SCREEN_WIDTH  = int(cut[0])
         self.SCREEN_HEIGHT = int(cut[1].split("+")[0]) - 40
+        #self.SCREEN_WIDTH = 800
+        #self.SCREEN_HEIGHT = 600
         self.SCREEN_CENTER = (self.SCREEN_WIDTH/2, self.SCREEN_HEIGHT/2)
         print(str(self.SCREEN_WIDTH) + "x" + str(self.SCREEN_HEIGHT))
         pygame.init()
@@ -66,7 +68,7 @@ class View(object):
         self.percent_resize_hand = (HAND_ZONE_HEIGHT) / lambda_card.image_origine.get_height()
         self.percent_resize_board = (self.SCREEN_HEIGHT - PROFILE_HEIGHT - HAND_ZONE_HEIGHT) / board.rect.height
         self.percent_resize_details  = (self.SCREEN_HEIGHT - HAND_ZONE_HEIGHT) / lambda_details.image.get_height()
-        self.percent_resize_board_card = (board.case_size) / lambda_card.image_origine.get_height()
+        self.percent_resize_board_card = (board.case_size * self.percent_resize_board) / lambda_card.image_origine.get_height()
         self.details_size = (lambda_details.image.get_width() * self.percent_resize_details, lambda_details.image.get_height() * self.percent_resize_details)
     
     def resize_game_board(self, board):

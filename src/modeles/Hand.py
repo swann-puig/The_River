@@ -23,11 +23,13 @@ class Hand(Graphic_object):
         self.group = pygame.sprite.LayeredUpdates()
         self.gridx = width/MAX_CARD_IN_HAND
         self.y = display_card_y
+        self.layer = 0
         
     def add_card(self, card):
         if (len(self.group) < MAX_CARD_IN_HAND):
-            self.group.add(card)
-            self.group.move_to_front(card)
+            self.group.add(card, layer=self.layer)
+            #self.group.move_to_front(card)
+            self.layer += 1
             self.c.resize_card_hand(card)
             card.set_interactive(True)
             self.refresh_all_pos()

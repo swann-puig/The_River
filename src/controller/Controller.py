@@ -21,10 +21,11 @@ class Controller():
         '''
         #------------------------------ CREATE ------------------------------
         self.view = View(self);
-        self.player = Player(self, "Joueur 1", 0xff0000, self.view.get_display_hand_card_Y())
+        self.player = Player(self, "Ton nom", 0xff0000, self.view.get_display_hand_card_Y())
         self.profile = Profile(self.player, self.view.SCREEN_WIDTH)
         self.board = Board_game(self)
         self.details = None
+        self.selected = (None, 0) # (card, layer)
         
         #------------------------------ RESIZE ------------------------------
         self.view.init_resize_element(self.board, self.player.deck_normal, self.player.deck_normal.cards[0], Card_details(self.player.deck_normal.cards[0], self.view.SCREEN_WIDTH, 0, 0))
@@ -46,8 +47,8 @@ class Controller():
     def update(self):
         while self.view.update():
             self.board.update()
-            self.player.update()
             self.profile.update(self.view)
+            self.player.update()
             if (self.details != None): self.details.update(self.view)
             self.view.display_all()
             
@@ -61,16 +62,23 @@ class Controller():
     def display_details(self, card, pos, remove=False):
         if (remove):
             self.details = None
-        elif (self.details == None):
-            self.details = Card_details(card, self.view.SCREEN_WIDTH, pos[0], 0, self.view.percent_resize_details)
-        elif (self.details.card != card):
-            self.details = Card_details(card, self.view.SCREEN_WIDTH, pos[0], 0, self.view.percent_resize_details)
+        elif (self.is_display_priority(card, pos) or card.is_posed()):
+            if (self.details == None):
+                self.details = Card_details(card, self.view.SCREEN_WIDTH, pos[0], 0, self.view.percent_resize_details)
+            elif (self.details.card != card):
+                self.details = Card_details(card, self.view.SCREEN_WIDTH, pos[0], 0, self.view.percent_resize_details)
         
     def display_check_details(self, event):
         for sprite in self.player.hand.group:
             if (sprite.rect.collidepoint(event.pos)):
                 return True
         self.details = None
+        
+    def is_display_priority(self, card, pos):
+        cards_overlapping = self.player.hand.group.get_sprites_at(pos)
+        if (cards_overlapping != []):
+            return cards_overlapping[-1] == card
+        return False
     
     def resize_card_hand(self, card):
         self.view.resize_card_hand(card)
@@ -95,6 +103,7 @@ class Controller():
             card.set_location(None)
             self.view.resize_card_hand(card)
         card.move_to_old_position()
+        self.deselect()
 
     def move_card_posed(self, card, pos):
         if not self.board.move_card(card, pos):
@@ -103,5 +112,16 @@ class Controller():
     def is_in_board(self, pos):
         return self.board.rect.collidepoint(pos)
     
+    def select(self, card):
+        if (self.selected[0] != None):
+            if (not self.selected[0].is_posed()):
+                self.player.hand.group.change_layer(self.selected[0], self.selected[1])
+        self.selected = (card, self.player.hand.group.get_layer_of_sprite(card))
+        self.player.hand.group.move_to_front(card)
         
+    def deselect(self):
+        if (self.selected[0] != None):
+            if (not self.selected[0].is_posed()):
+                self.player.hand.group.change_layer(self.selected[0], self.selected[1])
+        self.selected = (None, 0)
         
