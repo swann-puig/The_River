@@ -6,8 +6,9 @@ Created on 23 sept. 2018
 
 from src.utility.pygame_textinput import TextInput
 import pygame
-import subprocess
+import os
 from tkinter.filedialog import askopenfilename
+from src.constant import PATH_CARDS
 
 pygame.init()
 pygame.display.set_caption("Editor")
@@ -24,8 +25,11 @@ inputColor = pygame.Color("0x800000") #RRGGBB
 backgroundColor = pygame.Color("0xe1e1e1") #RRGGBB
 validateColor = pygame.Color("0x00ff00") #RRGGBB
 importImageColor = pygame.Color("0x0000ff") #RRGGBB
+errorColor = pygame.Color("0xff0000") #RRGGBB
 
 #---------------------------------- OUTPUT ----------------------------------
+
+infoText = fontText.render("Use <enter> key to go in the next entry.", True, importImageColor)
 
 nameText = fontText.render("name: ", True, textColor)
 familyText = fontText.render("family: ", True, textColor)
@@ -54,7 +58,7 @@ weightText = fontText.render("weight: ", True, textColor)
 
 #---------------------------------- INPUT ----------------------------------
 
-name = TextInput(font_family="times", font_size=FONT_SIZE, text_color=inputColor, cursor_color=textColor)
+name = TextInput("DSK", font_family="times", font_size=FONT_SIZE, text_color=inputColor, cursor_color=textColor)
 family = TextInput(font_family="times", font_size=FONT_SIZE, text_color=inputColor, cursor_color=textColor)
 description = TextInput(font_family="times", font_size=FONT_SIZE, text_color=inputColor, cursor_color=textColor)
 type = TextInput(font_family="times", font_size=FONT_SIZE, text_color=inputColor, cursor_color=textColor)
@@ -85,13 +89,14 @@ importImage = fontTitle.render("<Import Image>", True, importImageColor)
 image = None
 
 #---------------------------------- SELECTION ----------------------------------
-select = typeText # indique qui est selectionné
-x, y = 10, 10
+select = nameText # indique qui est selectionné
+x, y = 10, 50
 pady = nameText.get_height()
 selectPos = (0,0)
-imageTextPos = (x, pady*12)
-validatePos = (x, pady*14)
-imagePos = (x+350, 10)
+imageTextPos = (x, pady*11)
+validatePos = (x, pady*13)
+errorPos = (x, pady*15)
+imagePos = (x+350, y)
 selectNext = False
 
 commonText  = [nameText, familyText, descriptionText, typeText, effectText]
@@ -108,9 +113,115 @@ trapInput = [damageTrap, rangeTrap, weight]
 
 allTypes = [None, (creatureText, creatureInput), (magicText, magicInput), (trapText, trapInput)]
 
-def Validation():
-    print("DSK")
+error = fontText.render("", True, errorColor)
 
+def Validation():
+    global error
+    if len(name.get_text()) < 2:
+        error = fontText.render("invalid name", True, errorColor)
+        print("invalid name")
+        return False
+    
+    if type.get_text() == "creature":
+        try:
+            int(power.get_text())
+        except:
+            print("invalid power")
+            error = fontText.render("invalid power", True, errorColor)
+            return False
+        try:
+            int(movement.get_text())
+        except:
+            print("invalid movement")
+            error = fontText.render("invalid movement", True, errorColor)
+            return False
+        try:
+            int(range.get_text())
+        except:
+            print("invalid range")
+            error = fontText.render("invalid range", True, errorColor)
+            return False
+        try:
+            int(capacity.get_text())
+        except:
+            print("invalid capacity")
+            error = fontText.render("invalid capacity", True, errorColor)
+            return False
+            
+    elif type.get_text() == "magic":
+        try:
+            int(powerBonus.get_text())
+        except:
+            print("invalid power")
+            error = fontText.render("invalid power", True, errorColor)
+            return False
+        try:
+            int(castleBonus.get_text())
+        except:
+            print("invalid castle life")
+            error = fontText.render("invalid castle life", True, errorColor)
+            return False
+        try:
+            int(movementBonus.get_text())
+        except:
+            print("invalid movement")
+            error = fontText.render("invalid movement", True, errorColor)
+            return False
+        try:
+            int(rangeBonus.get_text())
+        except:
+            print("invalid range")
+            error = fontText.render("invalid range", True, errorColor)
+            return False
+        try:
+            int(weight.get_text())
+        except:
+            print("invalid weight")
+            error = fontText.render("invalid weight", True, errorColor)
+            return False
+        
+    elif type.get_text() == "trap":
+        try:
+            int(damageTrap.get_text())
+        except:
+            print("invalid damage")
+            error = fontText.render("invalid damage", True, errorColor)
+            return False
+        try:
+            int(rangeTrap.get_text())
+        except:
+            print("invalid range")
+            error = fontText.render("invalid range", True, errorColor)
+            return False
+        try:
+            int(weight.get_text())
+        except:
+            print("invalid weight")
+            error = fontText.render("invalid weight", True, errorColor)
+            return False
+    
+    else:
+        print("invalid type")
+        error = fontText.render("invalid type", True, errorColor)
+        return False
+    
+    if image != None:
+        if image.get_size() != (320, 320):
+            print("image must be 320x320 pixel")
+            error = fontText.render("image must be 320x320 pixel", True, errorColor)
+            return False
+    else:
+        print("no image")
+        error = fontText.render("no image", True, errorColor)
+        return False
+    
+    if os.path.exists(os.path.join(PATH_CARDS, name.get_text())):
+        print("card name already used")
+        error = fontText.render("card name already used", True, errorColor)
+        return False
+    
+    error = fontText.render("", True, errorColor)
+    return True
 
 validate = False
 
@@ -185,16 +296,59 @@ while not validate:
                 events = []
                 pygame.event.clear()
                 screen.blit(allTypes[i_type][1][i].get_surface(), (x + text.get_width(), y + pady * (i + line)))
-
+                
+        else:
+            screen.blit(allTypes[i_type][1][i].get_surface(), (x + text.get_width(), y + pady*i))
 
     
     screen.blit(validateText, validatePos)
     screen.blit(importImage, imageTextPos)
     
+    screen.blit(infoText, (200, 10))
+    screen.blit(error, errorPos)
+    
     pygame.display.update()
     clock.tick(30)
     
+#---------------------------------- AFTER VALIDATION ----------------------------------
 
+path = os.path.join(PATH_CARDS, name.get_text())
+os.makedirs(path)
 
+f = open(os.path.join(path, "infos"), "w")
 
+f.write("name: " + name.get_text() + "\n")
+f.write("family: " + family.get_text() + "\n")
+f.write("description: " + description.get_text() + "\n")
+f.write("type: " + type.get_text() + "\n")
+f.write("effect: " + effect.get_text() + "\n")
+
+f.close()
+
+f = open(os.path.join(path, "stats"), "w")
+
+if (type.get_text() == "creature"):
+    
+    f.write("power: " + power.get_text() + "\n")
+    f.write("movement: " + movement.get_text() + "\n")
+    f.write("range: " + range.get_text() + "\n")
+    f.write("capacity: " + capacity.get_text() + "\n")
+
+elif (type.get_text() == "magic"):
+    
+    f.write("power bonus: " + powerBonus.get_text() + "\n")
+    f.write("castle life bonus: " + castleBonus.get_text() + "\n")
+    f.write("movement bonus: " + movementBonus.get_text() + "\n")
+    f.write("range bonus: " + rangeBonus.get_text() + "\n")
+    f.write("weight: " + weight.get_text() + "\n")
+    
+elif (type.get_text() == "trap"):
+
+    f.write("damage: " + damageTrap.get_text() + "\n")
+    f.write("range: " + rangeTrap.get_text() + "\n")
+    f.write("weight: " + weight.get_text() + "\n")
+
+f.close()
+
+pygame.image.save(image, os.path.join(path, "image.png"))
 
