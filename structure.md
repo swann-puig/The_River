@@ -242,9 +242,7 @@ _couleur_
 
 _stats de base (lors de la création)_
 
-_point de vie_
-
-_dégats_
+_puissance_
 
 _déplacement_
 
@@ -264,19 +262,17 @@ _capacité_
 
 ### Carte magique
 
-_vie supplémentaire_
+_puissance supplémentaire_
 
 _vie chateau supplémentaire_
-
-_dégats supplémentaire_
 
 _déplacement supplémentaire_
 
 _porté d'attaque supplémentaire_
 
-_nom effet_
-
 _poid_
+
+_nom effet_
 
 - GetXXX
 
@@ -284,11 +280,11 @@ _poid_
 
 _dégats_
 
-_nom effet_
-
 _porté d'attaque_
 
 _poid_
+
+_nom effet_
 
 - GetXXX
 
