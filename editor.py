@@ -7,11 +7,12 @@ Created on 23 sept. 2018
 from src.utility.pygame_textinput import TextInput
 import pygame
 import subprocess
+from tkinter.filedialog import askopenfilename
 
 pygame.init()
 pygame.display.set_caption("Editor")
 
-screen = pygame.display.set_mode((800, 600))
+screen = pygame.display.set_mode((900, 600))
 clock = pygame.time.Clock()
 
 FONT_SIZE = 28
@@ -81,14 +82,16 @@ weight = TextInput(font_family="times", font_size=FONT_SIZE, text_color=inputCol
 #---------------------------------- BUTTON & IMAGE----------------------------------
 validateText = fontTitle.render("<Validate>", True, validateColor)
 importImage = fontTitle.render("<Import Image>", True, importImageColor)
+image = None
 
 #---------------------------------- SELECTION ----------------------------------
 select = typeText # indique qui est selectionné
 x, y = 10, 10
 pady = nameText.get_height()
 selectPos = (0,0)
-imagePos = (x, pady*12)
+imageTextPos = (x, pady*12)
 validatePos = (x, pady*14)
+imagePos = (x+350, 10)
 selectNext = False
 
 commonText  = [nameText, familyText, descriptionText, typeText, effectText]
@@ -105,6 +108,10 @@ trapInput = [damageTrap, rangeTrap, weight]
 
 allTypes = [None, (creatureText, creatureInput), (magicText, magicInput), (trapText, trapInput)]
 
+def Validation():
+    print("DSK")
+
+
 validate = False
 
 while not validate:
@@ -117,9 +124,23 @@ while not validate:
             
         elif event.type == pygame.MOUSEBUTTONDOWN:
             rect = validateText.get_rect()
-            if rect.x < event.pos[0] and rect.y < event.pos[1] and rect.x + rect.width < event.pos[0]:
-                pass
+            if validatePos[0] < event.pos[0] and event.pos[0] < validatePos[0] + rect.width and validatePos[1] < event.pos[1] and event.pos[1] < validatePos[1] + rect.height:
+                if Validation():
+                    validate = True
+                
+            rect = importImage.get_rect()
+            if imageTextPos[0] < event.pos[0] and event.pos[0] < imageTextPos[0] + rect.width and imageTextPos[1] < event.pos[1] and event.pos[1] < imageTextPos[1] + rect.height:
+                ftypes = [('PNG files', '*.png'), ('All files', '*')]
+                filename = askopenfilename(filetypes=ftypes)
+                print(filename)
+                image = pygame.image.load(filename).convert_alpha()
+                print(image)
+                try:
+                    pass
+                except:
+                    image = None
     
+    if (image != None): screen.blit(image, imagePos)
     
     if selectNext:
         select = commonText[0]
@@ -166,6 +187,14 @@ while not validate:
                 screen.blit(allTypes[i_type][1][i].get_surface(), (x + text.get_width(), y + pady * (i + line)))
 
 
-
+    
+    screen.blit(validateText, validatePos)
+    screen.blit(importImage, imageTextPos)
+    
     pygame.display.update()
     clock.tick(30)
+    
+
+
+
+
