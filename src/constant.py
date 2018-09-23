@@ -12,6 +12,7 @@ PATH_CARDS = os.path.join("files", "cards")
 PATH_BACKGROUND = None
 PATH_IMAGE_BOARD = os.path.join('files', 'boards', 'dev_board.png')
 PATH_BOARD_INFO = os.path.join('files', 'boards', 'dev_board')
+PATH_IMAGE_ICON = os.path.join("images", "icon.bmp")
 PATH_IMAGE_DECK_NORMAL = os.path.join('images', 'deck_normal.png')
 PATH_IMAGE_DECK_ACTION = os.path.join('images', 'deck_action.png')
 PATH_IMAGE_DETAILS = os.path.join('images', 'card.png')

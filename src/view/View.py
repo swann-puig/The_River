@@ -6,7 +6,7 @@ Created on 16 sept. 2018
 
 import pygame
 from pygame.locals import QUIT, MOUSEBUTTONDOWN, MOUSEBUTTONUP, MOUSEMOTION
-from src.constant import FPS, PATH_BACKGROUND, PROFILE_HEIGHT, HAND_ZONE_HEIGHT
+from src.constant import FPS, PATH_BACKGROUND, PROFILE_HEIGHT, HAND_ZONE_HEIGHT, PATH_IMAGE_ICON
 from screeninfo import get_monitors
 
 class View(object):
@@ -28,7 +28,10 @@ class View(object):
         self.SCREEN_CENTER = (self.SCREEN_WIDTH/2, self.SCREEN_HEIGHT/2)
         print(str(self.SCREEN_WIDTH) + "x" + str(self.SCREEN_HEIGHT))
         pygame.init()
+        pygame.display.set_caption("The River")
+        pygame.display.set_icon(pygame.image.load(PATH_IMAGE_ICON))
         self.window = pygame.display.set_mode((self.SCREEN_WIDTH, self.SCREEN_HEIGHT))#, pygame.FULLSCREEN)
+        
         self.clock = pygame.time.Clock()
 
         self.object_listen = []
