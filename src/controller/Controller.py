@@ -125,3 +125,11 @@ class Controller():
                 self.player.hand.group.change_layer(self.selected[0], self.selected[1])
         self.selected = (None, 0)
         
+    def display_move_zone(self, card):
+        self.board.display_move_zone(card)
+        
+    def remove_move_zone(self):
+        self.board.remove_move_zone()
+        
+        
+        

@@ -4,7 +4,7 @@ Created on 18 sept. 2018
 @author: Swann
 '''
 from src.modeles.Graphic_object import Graphic_object
-from src.constant import PATH_IMAGE_BOARD, PATH_BOARD_INFO
+from src.constant import PATH_IMAGE_BOARD, PATH_BOARD_INFO, CREATURE, MAGIC, TRAP
 from src.utility.loader import board_loader
 import pygame
 
@@ -28,6 +28,7 @@ class Board_game(Graphic_object):
         self.update_size()
         
         self.group = pygame.sprite.LayeredUpdates()
+        self.move_zone = pygame.sprite.Group()
         
     def change_image(self, new_image):
         old_height = self.rect.height
@@ -49,6 +50,17 @@ class Board_game(Graphic_object):
         self.raw =    [self.rect.y + i * self.case_size for i in range(0 , self.nb_raw+1)]
         self.column = [self.rect.x + i * self.case_size for i in range(0 , self.nb_column+1)]
         
+    def display_move_zone(self, card):
+        print("DSK")
+        w = h = card.get_movement()
+        for col in range(w):
+            for raw in range(h):
+                if (self.can_move_card(card, (raw, col))):
+                    self.move_zone.add(pygame.Rect(self.column[col], self.raw[raw] , self.case_size[0], self.case_size[1]))
+        
+    def remove_move_zone(self):
+        self.move_zone.remove()
+        
     def mouse_motion(self, event):
         pass
             
@@ -69,29 +81,34 @@ class Board_game(Graphic_object):
         index = self.get_index(pos[0], pos[1])
         if (index == None):
             return False
-        if (card.owner == self.c.get_main_player()): # tester à quel player la carte appartient
-            return (index in self.area1) and (not index in self.box_taken) and (not index in self.non_boxe)
-        else:
-            return index in self.area2
+        if (card.infos.type == CREATURE):
+            if (card.owner == self.c.get_main_player()):
+                return (index in self.area1) and (not index in self.box_taken) and (not index in self.non_boxe)
+            else:
+                return index in self.area2
     
     def pose_card(self, card, pos):
         if self.can_pose_card(card, pos):
-            index = self.get_index(pos[0], pos[1])
-            card.set_position(self.column[index[1]], self.raw[index[0]])
-            self.add_card(card)
-            self.box_taken.append(index)
-            return True
+            if (card.infos.type == CREATURE):
+                index = self.get_index(pos[0], pos[1])
+                card.set_position(self.column[index[1]], self.raw[index[0]])
+                self.add_card(card)
+                self.box_taken.append(index)
+                return True
         return False
         
-    def can_move_card(self, card, pos):
+    def can_move_card(self, card, pos, pixel=True):
         old_index = self.get_index(card.past_rect.x, card.past_rect.y)
-        index = self.get_index(pos[0], pos[1])
+        if (pixel):
+            index = self.get_index(pos[0], pos[1])
+        else:
+            index = pos
         if (index == None):
             return False
         if (card.owner == self.c.get_main_player()): # tester à quel player la carte appartient
             return ((not index in self.box_taken) 
                     and (not index in self.non_boxe) 
-                    and (abs(index[0] - old_index[0]) + abs(index[1] - old_index[1]) <= card.stats.movement)
+                    and (abs(index[0] - old_index[0]) + abs(index[1] - old_index[1]) <= card.get_movement())
                     )
         else:
             return not index in self.box_taken
@@ -117,6 +134,7 @@ class Board_game(Graphic_object):
         
     def update(self):
         super().update()
+        self.c.display_group(self.move_zone)
         self.c.display_group(self.group)
     
         
