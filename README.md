@@ -52,3 +52,15 @@ Une fois The_River cloné/téléchargé :
 Ouvrir le dossier **The_River** puis lancer le fichier **auto_install.py** avec python (Ouvrir avec... > Plus d'application > Python).
 
 Exécuter **main.py** et FINI!!
+
+# Gameplay (version actuel)
+
+Il n'y a pas de "partie" actuellement développé.
+
+On peut piocher des cartes depuis les deux decks en haut de l'écran. Les cartes piochés se trouvent dans notre main en bas de l'écran sous forme d'image.
+
+En survolant une carte avec la souris, on peut voir ses détails comme son nom et sa famille (pas nécessairement) en haut de la carte et la description. En bas de la carte, pour une créature, se trouve dans l'ordre: la puissance (power), les points de mouvements (M), la portée d'attaque (R) et la capacité d'équipement (C).
+
+On peut placer une carte sur le plateau de jeu dans sa zone de placement/invocation en vert en la glissant avec la souris dessus (drag and drop). Ensuite la même action se fait pour déplacer la carte sur le plateau.
+
+Un mauvais placement de la carte la fera revenir à son emplacement d'origine.
