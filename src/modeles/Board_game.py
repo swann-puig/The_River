@@ -59,8 +59,6 @@ class Board_game(Graphic_object):
         pos_card = self.get_index(card.past_rect.x, card.past_rect.y)
         for col in range(pos_card[1]-w, pos_card[1]+w+1):
             for raw in range(pos_card[0]-h, pos_card[0]+h+1):
-                print((raw, col))
-                print(self.can_move_card(card, (raw, col), pixel=False))
                 if (self.can_move_card(card, (raw, col), pixel=False)):
                     self.move_zone.append(pygame.Rect(self.column[col], self.raw[raw] , self.case_size, self.case_size))
         

@@ -98,8 +98,10 @@ class Controller():
     def get_main_player(self):
         return self.player
     
-    def place_card_on_board(self, card):
-        pass
+    def place_card_on_board(self, card, pos):
+        if self.board.pose_card(card, pos):
+            card.owner.hand.remove(card)
+            card.set_posed(True)
     
     def card_released_in_wrong_place(self, card):
         if (card.location == self.board):
