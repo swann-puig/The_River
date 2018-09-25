@@ -59,6 +59,9 @@ class Controller():
     def display_group(self, group):
         self.view.display_group(group)
         
+    def draw_rects(self, rects, color, width=0):
+        self.view.draw_rects(rects, color, width=0)
+        
     def display_details(self, card, pos, remove=False):
         if (remove):
             self.details = None

@@ -37,6 +37,7 @@ class Creature(Card):
     def mouse_pressed(self, event):
         super().mouse_pressed(event)
         if (self.rect.collidepoint(event.pos) and self.posed):
+            print("DSK")
             self.c.display_move_zone(self)
         
     def mouse_released(self, event):

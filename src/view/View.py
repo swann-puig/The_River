@@ -63,6 +63,10 @@ class View(object):
     def display_group(self, group):
         group.draw(self.window)
         
+    def draw_rects(self, rects, color, width=0):
+        for r in rects:
+            pygame.draw.rect(self.window, color, r, width)
+        
     def get_display_hand_card_Y(self):
         return self.SCREEN_HEIGHT - HAND_ZONE_HEIGHT
         

@@ -28,7 +28,7 @@ class Board_game(Graphic_object):
         self.update_size()
         
         self.group = pygame.sprite.LayeredUpdates()
-        self.move_zone = pygame.sprite.Group()
+        self.move_zone = []#pygame.sprite.Group()
         
     def change_image(self, new_image):
         old_height = self.rect.height
@@ -51,15 +51,15 @@ class Board_game(Graphic_object):
         self.column = [self.rect.x + i * self.case_size for i in range(0 , self.nb_column+1)]
         
     def display_move_zone(self, card):
-        print("DSK")
         w = h = card.get_movement()
         for col in range(w):
             for raw in range(h):
-                if (self.can_move_card(card, (raw, col))):
-                    self.move_zone.add(pygame.Rect(self.column[col], self.raw[raw] , self.case_size[0], self.case_size[1]))
+                if (self.can_move_card(card, (raw, col), pixel=False)):
+                    rect = pygame.Rect(self.column[col], self.raw[raw] , self.case_size, self.case_size)
+                    self.move_zone.append(rect)
         
     def remove_move_zone(self):
-        self.move_zone.remove()
+        self.move_zone.clear()
         
     def mouse_motion(self, event):
         pass
@@ -134,7 +134,7 @@ class Board_game(Graphic_object):
         
     def update(self):
         super().update()
-        self.c.display_group(self.move_zone)
+        self.c.draw_rects(self.move_zone, pygame.Color("yellow"))
         self.c.display_group(self.group)
     
         
