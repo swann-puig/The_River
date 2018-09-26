@@ -4,6 +4,7 @@ Created on 17 sept. 2018
 @author: Swann
 '''
 from src.modeles.Card import Card
+#from pygame.locals import LEFT
 
 class Creature(Card):
     '''
@@ -35,13 +36,24 @@ class Creature(Card):
         return self.stats.capacity
         
     def mouse_pressed(self, event):
-        super().mouse_pressed(event)
         if (self.rect.collidepoint(event.pos) and self.posed):
-            self.c.display_move_zone(self)
+            if (event.button == 1): # LEFT clic
+                self.c.deselect_from_board()
+                self.c.select_from_board(self)
+                super().mouse_pressed(event)
+            elif (event.button == 3): # RIGHT clic
+                self.c.display_details(self, event.pos)
+                
+        else:
+            super().mouse_pressed(event)
         
     def mouse_released(self, event):
+        if (self.posed):
+            self.c.move_card_posed(self, (self.rect.x - self.offset_x, self.rect.y - self.offset_y))
+
         super().mouse_released(event)
-        self.c.remove_move_zone()
         
     def mouse_motion(self, event):
         super().mouse_motion(event)
+        
+        

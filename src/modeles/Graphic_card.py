@@ -37,26 +37,23 @@ class Graphic_card(Graphic_object):
         self.posed = Bool
     
     def mouse_pressed(self, event):
-        if (self.rect.collidepoint(event.pos)):
-            if (not self.posed):
-                if (self.c.is_display_priority(self, event.pos)):
-                    super().mouse_pressed(event)
-                    self.c.select(self)
-                    self.c.display_details(self, event.pos, remove=True)
-            else:
+        if (self.rect.collidepoint(event.pos) and not self.posed):
+            if (self.c.is_display_priority(self, event.pos)):
                 super().mouse_pressed(event)
-                self.c.display_details(self, event.pos)
+                self.c.select_from_hand(self)
+                self.c.display_details(self, event.pos, remove=True)
+        
+        else:
+            super().mouse_pressed(event)
         
     def mouse_released(self, event):
-        super().mouse_released(event)
         if (self.get_location() == self.c.board and not self.posed):
-            if self.c.place_card_on_board(self, (self.rect.x - self.offset_x, self.rect.y - self.offset_y)):
-                return True
-        elif (self.posed):
-            self.c.move_card_posed(self, (self.rect.x - self.offset_x, self.rect.y - self.offset_y))
-            return True
+            self.c.place_card_on_board(self, (self.rect.x - self.offset_x, self.rect.y - self.offset_y))
         
-        self.c.card_released_in_wrong_place(self)
+        if (self.drag and not self.posed): # verification une 2eme fois car l'etat a peut etre change
+            self.c.card_released_in_wrong_place(self)
+            
+        super().mouse_released(event)
         
     def mouse_motion(self, event):
         if (self.drag):
@@ -75,7 +72,6 @@ class Graphic_card(Graphic_object):
         elif (self.rect.collidepoint(event.pos) and not self.posed):
             self.c.display_details(self, event.pos)
                 
-        
         super().mouse_motion(event)
         
         

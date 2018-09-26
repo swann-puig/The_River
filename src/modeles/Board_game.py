@@ -144,7 +144,7 @@ class Board_game(Graphic_object):
         
     def update(self):
         super().update()
-        self.c.draw_rects(self.move_zone, pygame.Color("yellow"), width=2)
+        self.c.draw_rects(self.move_zone, pygame.Color(0xf2f20000), alpha=64)
         self.c.display_group(self.group)
     
         

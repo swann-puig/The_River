@@ -25,7 +25,7 @@ class Controller():
         self.profile = Profile(self.player, self.view.SCREEN_WIDTH)
         self.board = Board_game(self)
         self.details = None
-        self.selected = (None, 0) # (card, layer)
+        self.selected_from_hand = (None, 0) # (card, layer)
         
         #------------------------------ RESIZE ------------------------------
         self.view.init_resize_element(self.board, self.player.deck_normal, self.player.deck_normal.cards[0], Card_details(self.player.deck_normal.cards[0], self.view.SCREEN_WIDTH, 0, 0))
@@ -59,8 +59,8 @@ class Controller():
     def display_group(self, group):
         self.view.display_group(group)
         
-    def draw_rects(self, rects, color, width=0):
-        self.view.draw_rects(rects, color, width)
+    def draw_rects(self, rects, color, alpha=255):
+        self.view.draw_rects(rects, color, alpha)
         
     def display_details(self, card, pos, remove=False):
         if (remove):
@@ -110,27 +110,37 @@ class Controller():
             card.set_location(None)
             self.view.resize_card_hand(card)
         card.move_to_old_position()
-        self.deselect()
+        self.deselect_from_hand()
 
     def move_card_posed(self, card, pos):
-        if not self.board.move_card(card, pos):
+        if self.board.move_card(card, pos):
+            self.deselect_from_board()
+            self.select_from_board(card)
+        else:
             card.move_to_old_position()
+            
         
     def is_in_board(self, pos):
         return self.board.rect.collidepoint(pos)
     
-    def select(self, card):
-        if (self.selected[0] != None):
-            if (not self.selected[0].is_posed()):
-                self.player.hand.group.change_layer(self.selected[0], self.selected[1])
-        self.selected = (card, self.player.hand.group.get_layer_of_sprite(card))
+    def select_from_hand(self, card):
+        if (self.selected_from_hand[0] != None):
+            if (not self.selected_from_hand[0].is_posed()):
+                self.player.hand.group.change_layer(self.selected_from_hand[0], self.selected_from_hand[1])
+        self.selected_from_hand = (card, self.player.hand.group.get_layer_of_sprite(card))
         self.player.hand.group.move_to_front(card)
         
-    def deselect(self):
-        if (self.selected[0] != None):
-            if (not self.selected[0].is_posed()):
-                self.player.hand.group.change_layer(self.selected[0], self.selected[1])
-        self.selected = (None, 0)
+    def deselect_from_hand(self):
+        if (self.selected_from_hand[0] != None):
+            if (not self.selected_from_hand[0].is_posed()):
+                self.player.hand.group.change_layer(self.selected_from_hand[0], self.selected_from_hand[1])
+        self.selected_from_hand = (None, 0)
+        
+    def select_from_board(self, card):
+        self.display_move_zone(card)
+        
+    def deselect_from_board(self):
+        self.remove_move_zone()
         
     def display_move_zone(self, card):
         self.board.display_move_zone(card)

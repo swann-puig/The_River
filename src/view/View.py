@@ -63,9 +63,13 @@ class View(object):
     def display_group(self, group):
         group.draw(self.window)
         
-    def draw_rects(self, rects, color, width=0):
+    def draw_rects(self, rects, color, alpha=255):
         for r in rects:
-            pygame.draw.rect(self.window, color, r, width)
+            s = pygame.Surface((r.width, r.height))  # the size of your rect
+            s.set_alpha(alpha)                # alpha level
+            s.fill(color)           # this fills the entire surface
+            self.window.blit(s, (r.x,r.y))    # (0,0) are the top-left coordinates
+            #pygame.draw.rect(self.window, color, r, width)
         
     def get_display_hand_card_Y(self):
         return self.SCREEN_HEIGHT - HAND_ZONE_HEIGHT
