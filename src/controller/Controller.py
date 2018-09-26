@@ -102,6 +102,8 @@ class Controller():
         if self.board.pose_card(card, pos):
             card.owner.hand.remove(card)
             card.set_posed(True)
+            return True
+        return False
     
     def card_released_in_wrong_place(self, card):
         if (card.location == self.board):

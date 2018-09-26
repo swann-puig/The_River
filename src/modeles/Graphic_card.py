@@ -50,8 +50,8 @@ class Graphic_card(Graphic_object):
     def mouse_released(self, event):
         super().mouse_released(event)
         if (self.get_location() == self.c.board and not self.posed):
-            self.c.place_card_on_board(self, (self.rect.x - self.offset_x, self.rect.y - self.offset_y))
-            return True
+            if self.c.place_card_on_board(self, (self.rect.x - self.offset_x, self.rect.y - self.offset_y)):
+                return True
         elif (self.posed):
             self.c.move_card_posed(self, (self.rect.x - self.offset_x, self.rect.y - self.offset_y))
             return True

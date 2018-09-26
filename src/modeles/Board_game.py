@@ -95,7 +95,10 @@ class Board_game(Graphic_object):
         if self.can_pose_card(card, pos):
             if (card.infos.type == CREATURE):
                 index = self.get_index(pos[0], pos[1])
+                print(index)
                 card.set_position(self.column[index[1]], self.raw[index[0]])
+                print(self.get_index(card.rect.x, card.rect.y))
+                print(self.get_index(card.past_rect.x, card.past_rect.y))
                 self.add_card(card)
                 self.box_taken.append(index)
                 return True
@@ -113,7 +116,7 @@ class Board_game(Graphic_object):
             return ((not index in self.box_taken) 
                     and (not index in self.non_boxe) 
                     and (abs(index[0] - old_index[0]) + abs(index[1] - old_index[1]) <= card.get_movement())
-                    and index in self.board)
+                    )#and index in self.board)
         else:
             return not index in self.box_taken
     
