@@ -23,8 +23,8 @@ class View(object):
         cut = str(get_monitors()[0]).split("(")[1].split("x")
         self.SCREEN_WIDTH  = int(cut[0])
         self.SCREEN_HEIGHT = int(cut[1].split("+")[0]) - 40
-        #self.SCREEN_WIDTH = 800
-        #self.SCREEN_HEIGHT = 600
+        #self.SCREEN_WIDTH = 1024
+        #self.SCREEN_HEIGHT = 768
         self.SCREEN_CENTER = (self.SCREEN_WIDTH/2, self.SCREEN_HEIGHT/2)
         print(str(self.SCREEN_WIDTH) + "x" + str(self.SCREEN_HEIGHT))
         pygame.init()

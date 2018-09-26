@@ -26,7 +26,12 @@ class Board_game(Graphic_object):
         self.box_taken = []
         self.column = []
         self.raw = []
+        
         self.update_size()
+        
+        for i in range(0, self.nb_column):
+            for j in range(0, self.nb_raw):
+                self.board.append((j, i))
         
         self.group = pygame.sprite.LayeredUpdates()
         self.move_zone = []#pygame.sprite.Group()
@@ -42,17 +47,15 @@ class Board_game(Graphic_object):
     
     def set_position(self, x, y):
         super().set_position(x, y)
-        self.raw =    [self.rect.y + i * self.case_size for i in range(0 , self.nb_raw+1)]
-        self.column = [self.rect.x + i * self.case_size for i in range(0 , self.nb_column+1)]
-        
+        self.update_raw_and_col()
             
     def update_size(self):
         super().update_size()
-        self.raw =    [self.rect.y + i * self.case_size for i in range(0 , self.nb_raw+1)]
-        self.column = [self.rect.x + i * self.case_size for i in range(0 , self.nb_column+1)]
-        for i in range(0, self.nb_column):
-            for j in range(0, self.nb_raw):
-                self.board.append((j, i))
+        self.update_raw_and_col()
+
+    def update_raw_and_col(self):
+        self.raw =    [round(self.rect.y + i * self.case_size) for i in range(0 , self.nb_raw+1)]
+        self.column = [round(self.rect.x + i * self.case_size) for i in range(0 , self.nb_column+1)]
         
     def display_move_zone(self, card):
         w = h = card.get_movement()
@@ -116,7 +119,7 @@ class Board_game(Graphic_object):
             return ((not index in self.box_taken) 
                     and (not index in self.non_boxe) 
                     and (abs(index[0] - old_index[0]) + abs(index[1] - old_index[1]) <= card.get_movement())
-                    )#and index in self.board)
+                    and index in self.board)
         else:
             return not index in self.box_taken
     
