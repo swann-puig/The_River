@@ -12,7 +12,6 @@ class Magic_stats():
         '''
         Constructor
         '''
-        self.max_power = power
         self.power = power
         self.castle_life = castle_life
         self.movement = move

@@ -4,7 +4,7 @@ Created on 17 sept. 2018
 @author: Swann
 '''
 from src.modeles.Card import Card
-#from pygame.locals import LEFT
+from src.constant import MAGIC, TRAP
 
 class Creature(Card):
     '''
@@ -26,21 +26,33 @@ class Creature(Card):
     def get_power(self):
         power = self.stats.power
         for card in self.equipped_card:
-            power += card.get_power_bonus(self)
+            if (card.infos.type == MAGIC): power += card.get_power_bonus(self)
             
         return power
         
     def get_movement(self):
-        return self.stats.movement
+        m = self.stats.movement
+        for card in self.equipped_card:
+            if (card.infos.type == MAGIC): m += card.get_movement_bonus()
+            
+        return m
         
     def get_range(self):
-        return self.stats.range
+        r = self.stats.range
+        for card in self.equipped_card:
+            if (card.infos.type == MAGIC): r += card.get_range_bonus()
+            
+        return r
         
     def get_capacity(self):
-        return self.stats.capacity
+        c = self.stats.capacity
+        for card in self.equipped_card:
+            c -= card.get_weight()
+            
+        return c
     
     def can_equip(self, card):
-        return (self.get_capacity() >= card.stats.weight)
+        return (self.get_capacity() >= card.get_weight())
     
     def equip(self, card):
         if self.can_equip(card):

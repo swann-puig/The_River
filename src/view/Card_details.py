@@ -58,7 +58,7 @@ class Card_details():
             self.action_point = None
             
         #------------------------------ POSITIONS FIXED MANUALLY ------------------------------
-        self.pos_name = (15, 0)
+        self.pos_name = (15, 2)
         self.pos_family = None # dépend de name
         self.pos_description = (20, 405)
         
@@ -118,9 +118,10 @@ class Card_details():
         else:
             self.action_point = self.fontStats.render("Action:" + str(self.card.stats.action_point), True, self.textColor)
             
+        #------------------------------ POSITIONS ------------------------------
         
         self.pos_name = (self.pos_name[0] * percent, self.pos_name[1] * percent)
-        self.pos_family = (self.pos_name[0], self.pos_name[1] + self.name.get_height() - 12 * percent)
+        self.pos_family = (self.pos_name[0], self.pos_name[1] + self.name.get_height() - 13 * percent)
         self.pos_description = (self.pos_description[0] * percent, self.pos_description[1] * percent)
         
         if (self.card.infos.type != "action"):

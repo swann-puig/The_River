@@ -18,14 +18,14 @@ class Card_infos():
         self.type = type
         self.effect = effect
         self.image_path = image_path
-        self.color = 0x000000
+        self.color = 0x000000ff
         if (self.type == "creature"):
-            self.color = 0x555555
+            self.color = 0xffff0020
         elif (self.type == "Magic"):
-            self.color = 0x0000ff
+            self.color = 0x0000ff20
         elif (self.type == "trap"):
-            self.color = 0xff0000
+            self.color = 0xff000020
         elif (self.type == "action"):
-            self.color = 0x00ff00
+            self.color = 0x00ff0020
             
             

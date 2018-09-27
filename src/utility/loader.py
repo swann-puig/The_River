@@ -59,6 +59,22 @@ def card_loader(card_name):
         
         s = Magic_stats(power, castle_life, move, Range, weight)
         
+    elif (Type == "trap"):
+        file = open(os.path.join(PATH_CARDS, card_name, "stats"), "r")
+        damage = int(file.readline().split(": ")[1])
+        Range = int(file.readline().split(": ")[1])
+        weight = int(file.readline().split(": ")[1])
+        file.close()
+        
+        s = (damage, Range, weight)
+        
+    elif (Type == "action"):
+        file = open(os.path.join(PATH_CARDS, card_name, "stats"), "r")
+        action_point = int(file.readline().split(": ")[1])
+        file.close()
+        
+        s = (action_point)
+        
     else:
         s = Creature_stats(1000, 2, 2, 1)
 

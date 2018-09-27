@@ -20,4 +20,16 @@ class Magic(Card):
         
     def get_power_bonus(self, creature):
         return self.stats.power
+    
+    def get_castle_life_bonus(self, castle):
+        return self.stats.castle_life
+    
+    def get_movement_bonus(self):
+        return self.stats.movement
+    
+    def get_range_bonus(self):
+        return self.stats.range
+    
+    def get_weight(self):
+        return self.stats.weight
         
