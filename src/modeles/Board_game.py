@@ -84,26 +84,44 @@ class Board_game(Graphic_object):
                     if (self.column[j] <= x and x < self.column[j+1]):
                         return (i,j)
     
+    def get_creature_for_equip(self, equip_card, index=False):
+        list = []
+        for creature in self.group:
+            if creature.can_equip(equip_card):
+                if (index):
+                    list.append(self.get_index(creature.rect.x, creature.rect.y))
+                else:
+                    list.append(creature)
+                
+        return list
+    
     def can_pose_card(self, card, pos):
         index = self.get_index(pos[0], pos[1])
         if (index == None):
             return False
         if (card.infos.type == CREATURE):
-            if (card.owner == self.c.get_main_player()):
-                return (index in self.area1) and (not index in self.box_taken) and (not index in self.non_boxe)
-            else:
-                return index in self.area2
+                return ((index in self.area1)
+                        and (not index in self.box_taken)
+                        and (not index in self.non_boxe)
+                        )
+
+        if (card.infos.type == MAGIC):
+            return (index in self.get_creature_for_equip(card, index=True))
     
     def pose_card(self, card, pos):
         if self.can_pose_card(card, pos):
             if (card.infos.type == CREATURE):
                 index = self.get_index(pos[0], pos[1])
-                print(index)
                 card.set_position(self.column[index[1]], self.raw[index[0]])
-                print(self.get_index(card.rect.x, card.rect.y))
-                print(self.get_index(card.past_rect.x, card.past_rect.y))
                 self.add_card(card)
                 self.box_taken.append(index)
+                return True
+            
+            if (card.infos.type == MAGIC or card.infos.type == TRAP):
+                index = self.get_index(pos[0], pos[1])
+                list_creature = self.get_creature_for_equip(card)
+                list_index = self.get_creature_for_equip(card, index=True)
+                list_creature[list_index.index(index)].equip(card)
                 return True
         return False
         
@@ -115,13 +133,10 @@ class Board_game(Graphic_object):
             index = pos
         if (index == None):
             return False
-        if (card.owner == self.c.get_main_player()): # tester à quel player la carte appartient
-            return ((not index in self.box_taken) 
-                    and (not index in self.non_boxe) 
-                    and (abs(index[0] - old_index[0]) + abs(index[1] - old_index[1]) <= card.get_movement())
-                    and index in self.board)
-        else:
-            return not index in self.box_taken
+        return ((not index in self.box_taken)
+                and (not index in self.non_boxe) 
+                and (abs(index[0] - old_index[0]) + abs(index[1] - old_index[1]) <= card.get_movement())
+                and index in self.board)
     
     def move_card(self, card, pos):
         if self.can_move_card(card, pos):

@@ -8,7 +8,7 @@ class Card_infos():
     '''
     Standard of basic informations about a card.
     '''
-    def __init__(self, name, family, description, type, image_path):
+    def __init__(self, name, family, description, type, effect, image_path):
         '''
         Constructor
         '''
@@ -16,11 +16,12 @@ class Card_infos():
         self.family = family
         self.description = description
         self.type = type
+        self.effect = effect
         self.image_path = image_path
         self.color = 0x000000
         if (self.type == "creature"):
             self.color = 0x555555
-        elif (self.type == "magic"):
+        elif (self.type == "Magic"):
             self.color = 0x0000ff
         elif (self.type == "trap"):
             self.color = 0xff0000

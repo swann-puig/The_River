@@ -5,6 +5,7 @@ Created on 17 sept. 2018
 '''
 from src.modeles.Graphic_object import Graphic_object
 from src.modeles.Creature import Creature
+from src.modeles.Magic import Magic
 from src.utility.loader import deck_loader
 
 class Deck(Graphic_object):
@@ -30,7 +31,17 @@ class Deck(Graphic_object):
         self.name = load[0]
         list_card_data = load[1]
         for data in list_card_data:
-            self.cards.append(Creature(self.c, self.owner, data.infos, data.stats))
+            if (data.infos.type == "creature"):
+                self.cards.append(Creature(self.c, self.owner, data.infos, data.stats))
+        
+            elif (data.infos.type == "magic"):
+                self.cards.append(Magic(self.c, self.owner, data.infos, data.stats))
+
+            elif (data.infos.type == "trap"):
+                self.cards.append(Magic(self.c, self.owner, data.infos, data.stats))
+                
+            elif (data.infos.type == "action"):
+                self.cards.append(Magic(self.c, self.owner, data.infos, data.stats))
         
     def is_empty(self):
         return len(self.cards) == 0

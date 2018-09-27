@@ -6,6 +6,7 @@ Created on 17 sept. 2018
 
 from src.utility.Card_infos import Card_infos
 from src.utility.Creature_stats import Creature_stats
+from src.utility.Magic_stats import Magic_stats
 from src.constant import PATH_DECKS, PATH_CARDS
 import os
 
@@ -27,12 +28,15 @@ def card_loader(card_name):
     name = file.readline().split(": ")[1][:-1]
     family = file.readline().split(": ")[1][:-1]
     description = file.readline().split(": ")[1][:-1]
-    Type = file.readline().split(": ")[1]
+    Type = file.readline().split(": ")[1][:-1]
+    effect = file.readline().split(": ")[1]
     image_path = os.path.join(PATH_CARDS, card_name,"image.png")
     file.close()
     
-    i = Card_infos(name, family, description, Type, image_path)
+    i = Card_infos(name, family, description, Type, effect, image_path)
     s = None
+    
+    print(Type)
     if (Type == "creature"):
         file = open(os.path.join(PATH_CARDS, card_name, "stats"), "r")
         power = int(file.readline().split(": ")[1])
@@ -42,6 +46,18 @@ def card_loader(card_name):
         file.close()
         
         s = Creature_stats(power, move, Range, capacity)
+        
+    elif (Type == "magic"):
+        
+        file = open(os.path.join(PATH_CARDS, card_name, "stats"), "r")
+        power = int(file.readline().split(": ")[1])
+        castle_life = int(file.readline().split(": ")[1])
+        move = int(file.readline().split(": ")[1])
+        Range = int(file.readline().split(": ")[1])
+        weight = int(file.readline().split(": ")[1])
+        file.close()
+        
+        s = Magic_stats(power, castle_life, move, Range, weight)
         
     else:
         s = Creature_stats(1000, 2, 2, 1)

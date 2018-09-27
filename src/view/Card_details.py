@@ -4,7 +4,8 @@ Created on 21 sept. 2018
 @author: Swann
 '''
 
-from src.constant import PATH_IMAGE_DETAILS, DETAILS_NAME_WIDTH, DETAILS_POWER_WIDTH, DETAILS_DESCRIPTION_WIDTH, DETAILS_OTHER_WIDTH
+from src.constant import PATH_IMAGE_DETAILS_C, PATH_IMAGE_DETAILS_M, PATH_IMAGE_DETAILS_T, PATH_IMAGE_DETAILS_A, CREATURE, MAGIC, TRAP, ACTION
+from src.constant import DETAILS_NAME_WIDTH, DETAILS_POWER_WIDTH, DETAILS_DESCRIPTION_WIDTH, DETAILS_OTHER_WIDTH
 import pygame
 
 class Card_details():
@@ -18,7 +19,14 @@ class Card_details():
         Constructor
         '''
         self.card = card
-        self.image = pygame.image.load(PATH_IMAGE_DETAILS).convert_alpha()
+        if (card.infos.type == CREATURE):
+            self.image = pygame.image.load(PATH_IMAGE_DETAILS_C).convert_alpha()
+        elif (card.infos.type == MAGIC):
+            self.image = pygame.image.load(PATH_IMAGE_DETAILS_M).convert_alpha()
+        elif (card.infos.type == TRAP):
+            self.image = pygame.image.load(PATH_IMAGE_DETAILS_T).convert_alpha()
+        else:
+            self.image = pygame.image.load(PATH_IMAGE_DETAILS_A).convert_alpha()
         self.rect = self.image.get_rect()
         self.rect.x = x - self.rect.width/2
         self.rect.y = y
@@ -91,18 +99,21 @@ class Card_details():
         
         #------------------------------ STATS ------------------------------
         self.fontStats = self.get_good_font_size("times", DETAILS_OTHER_WIDTH*percent/4, "M:" + str(self.card.stats.movement), bold=True)
-        if (self.card.infos.type != "action"):
+        if (self.card.infos.type == "creature"):
             # Common
             self.fontPower = self.get_good_font_size("times", DETAILS_POWER_WIDTH*percent, "Power:" + str(self.card.stats.power), bold=True)
-            self.power = self.fontPower.render("Power:" + str(self.card.stats.power), True, self.textColor)
+            self.power = self.fontPower.render("Power:" + str(self.card.get_power()), True, self.textColor)
+            self.movement = self.fontStats.render("M:" + str(self.card.get_movement()), True, self.textColor)
+            self.range = self.fontStats.render("R:" + str(self.card.get_range()), True, self.textColor)
+            self.capacity_weight = self.fontStats.render("C:" + str(self.card.get_capacity()), True, self.textColor)
+            
+                
+        elif (self.card.infos.type == "magic"):
+            self.fontPower = self.get_good_font_size("times", DETAILS_POWER_WIDTH*percent, "Power:" + str(self.card.stats.power), bold=True)
+            self.power = self.fontPower.render("Power:" + str(self.card.get_power_bonus(None)), True, self.textColor)
             self.movement = self.fontStats.render("M:" + str(self.card.stats.movement), True, self.textColor)
             self.range = self.fontStats.render("R:" + str(self.card.stats.range), True, self.textColor)
-        
-            # varies by types
-            if (self.card.infos.type == "creature"):
-                self.capacity_weight = self.fontStats.render("C:" + str(self.card.stats.capacity), True, self.textColor)
-            else:
-                self.capacity_weight = self.fontStats.render("W:" + str(self.card.stats.weight), True, self.textColor)
+            self.capacity_weight = self.fontStats.render("W:" + str(self.card.stats.weight), True, self.textColor)
         
         else:
             self.action_point = self.fontStats.render("Action:" + str(self.card.stats.action_point), True, self.textColor)

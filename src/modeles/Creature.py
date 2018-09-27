@@ -24,7 +24,11 @@ class Creature(Card):
         return self.stats.max_power
         
     def get_power(self):
-        return self.stats.power
+        power = self.stats.power
+        for card in self.equipped_card:
+            power += card.get_power_bonus(self)
+            
+        return power
         
     def get_movement(self):
         return self.stats.movement
@@ -34,6 +38,15 @@ class Creature(Card):
         
     def get_capacity(self):
         return self.stats.capacity
+    
+    def can_equip(self, card):
+        return (self.get_capacity() >= card.stats.weight)
+    
+    def equip(self, card):
+        if self.can_equip(card):
+            self.equipped_card.append(card)
+            return True
+        return False
         
     def mouse_pressed(self, event):
         if (self.rect.collidepoint(event.pos) and self.posed):

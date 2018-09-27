@@ -15,7 +15,10 @@ PATH_BOARD_INFO = os.path.join('files', 'boards', 'dev_board')
 PATH_IMAGE_ICON = os.path.join("images", "icon.bmp")
 PATH_IMAGE_DECK_NORMAL = os.path.join('images', 'deck_normal.png')
 PATH_IMAGE_DECK_ACTION = os.path.join('images', 'deck_action.png')
-PATH_IMAGE_DETAILS = os.path.join('images', 'card.png')
+PATH_IMAGE_DETAILS_C = os.path.join('images', 'creature_card.png')
+PATH_IMAGE_DETAILS_M = os.path.join('images', 'magic_card.png')
+PATH_IMAGE_DETAILS_T = os.path.join('images', 'trap_card.png')
+PATH_IMAGE_DETAILS_A = os.path.join('images', 'action_card.png')
 PATH_IMAGE_HAND = os.path.join("images", "hand.png")
 PATH_CARDS_INVENTORY = os.path.join("files", "all_cards_inventory.txt")
 
@@ -37,4 +40,5 @@ MAX_CARD_IN_HAND = 8
 CREATURE = "creature"
 MAGIC = "magic"
 TRAP = "trap"
+ACTION = "action"
 
