@@ -41,4 +41,5 @@ CREATURE = "creature"
 MAGIC = "magic"
 TRAP = "trap"
 ACTION = "action"
-
+SINGLE = 0
+NETWORK = 1

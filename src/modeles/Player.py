@@ -61,6 +61,15 @@ class Player():
     def add_life(self, amount):
         self.life += amount
         
+    def set_visible(self, state):
+        self.deck_normal.set_interactive(state)
+        self.deck_action.set_interactive(state)
+        self.hand.set_interactive(state)
+        
+        self.deck_normal.set_visible(state)
+        self.deck_action.set_visible(state)
+        self.hand.set_visible(state)
+        
     def update(self):
         self.deck_normal.update()
         self.deck_action.update()

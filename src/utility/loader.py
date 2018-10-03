@@ -36,7 +36,6 @@ def card_loader(card_name):
     i = Card_infos(name, family, description, Type, effect, image_path)
     s = None
     
-    print(Type)
     if (Type == "creature"):
         file = open(os.path.join(PATH_CARDS, card_name, "stats"), "r")
         power = int(file.readline().split(": ")[1])

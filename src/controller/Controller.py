@@ -9,21 +9,28 @@ from src.view.Profile import Profile
 from src.view.Card_details import Card_details
 from src.modeles.Player import Player
 from src.modeles.Board_game import Board_game
+from src.constant import SINGLE, NETWORK
 
 class Controller():
     '''
     classdocs
     '''
 
-    def __init__(self):
+    def __init__(self, mode):
         '''
         Constructor
         '''
+        self.mode = mode
         #------------------------------ CREATE ------------------------------
         self.view = View(self);
-        self.player = Player(self, "Ton nom", 0xff0000, self.view.get_display_hand_card_Y())
-        self.profile = Profile(self.player, self.view.SCREEN_WIDTH)
+        self.player = Player(self, "Player1 nom", 0xff0000, self.view.get_display_hand_card_Y())
         self.board = Board_game(self)
+        self.profile = Profile(self.player, self.view.SCREEN_WIDTH)
+        if (mode == SINGLE):
+            self.player2 = Player(self, "Player2 nom", 0xff0000, self.view.get_display_hand_card_Y())
+        else:
+            self.player2 = Player(self, "Player2 nom", 0xff0000, self.view.get_display_hand_card_Y())
+        
         self.details = None
         self.selected_from_hand = (None, 0) # (card, layer)
         
@@ -40,6 +47,7 @@ class Controller():
         #self.hand.set_position()
         
         #------------------------------ START ------------------------------
+        self.round = self.player
         self.player.start()
         self.update()
     
@@ -49,6 +57,7 @@ class Controller():
             self.board.update()
             self.profile.update(self.view)
             self.player.update()
+            self.player2.update()
             if (self.details != None): self.details.update(self.view)
             self.view.display_all()
             
@@ -148,5 +157,13 @@ class Controller():
     def remove_move_zone(self):
         self.board.remove_move_zone()
         
+    def end_turn(self, player):
+        if (self.round == self.player):
+            self.round = self.player2
+        else:
+            self.round = self.player
+        
+        player.set_visible(False)
+        self.round.set_visible(True)
         
         

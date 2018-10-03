@@ -46,7 +46,8 @@ class Hand(Graphic_object):
         
     def update(self):
         super().update()
-        self.c.display_group(self.group)
+        if self.is_visible:
+            self.c.display_group(self.group)
         
         
         
