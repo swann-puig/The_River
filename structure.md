@@ -3,6 +3,10 @@ Structure du code
 
 Pour ce projet j'ai choisi un modèle MVC (Modèles Vue Contrôleur).
 
+- Un modèle (Model) contient les données à afficher.
+- Une vue (View) contient la présentation de l'interface graphique.
+- Un contrôleur (Controller) contient la logique concernant les actions effectuées par l'utilisateur.
+
 La légende pour ce fichier est :
 
 _attribut_
@@ -33,17 +37,7 @@ Tous les objets doivent avoir un attribut qui est le contrôleur.
 
 _vue_
 
-_main_
-
 _terrain_
-
-_deck normale_
-
-_deck action_
-
-_liste des cartes sur le terrain_
-
-_liste des cartes non traversable_
 
 _joueur_
 
