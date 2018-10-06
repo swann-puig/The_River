@@ -88,6 +88,16 @@ class Deck(Graphic_object):
     def destroy(self):
         pass
     
+    def visible(self, state):
+        super().visible(state)
+        for card in self.cards:
+            card.visible(state)
+    
+    def set_interactive(self, state):
+        super().set_interactive(state)
+        for card in self.cards:
+            card.set_interactive(state)
+    
     def mouse_pressed(self, event):
         if (self.rect.collidepoint(event.pos)):
             self.c.cards_drawn(self, self.draw())

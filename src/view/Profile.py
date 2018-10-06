@@ -27,6 +27,8 @@ class Profile():
         self.textLife = self.fontText.render("Life: ", 1, self.textColor)
         self.textAction = self.fontText.render("Action Point: ", 1, self.textColor)
         
+        self.buttonEndTurn = self.fontText.render("END TURN", 1, pygame.Color("0xff0000"))
+        
         #------------------------------ CONFIG ------------------------------
         self.inter_line = self.textAction.get_height() + 6
         self.padx, self.pady = 5, 5
@@ -45,6 +47,8 @@ class Profile():
         self.life = None
         self.action = None
         
+        self.player.c.view.add_listen_mouse_event(self)
+        
     def get_width(self):
         return self.rect.width
         
@@ -52,6 +56,17 @@ class Profile():
         if (self.value_life != self.player.get_life() or self.value_action != self.player.get_action_point()):
             self.life = self.fontText.render(str(self.player.get_life()), 1, self.textColor)
             self.action = self.fontText.render(str(self.player.get_action_point()), 1, self.textColor)
+        
+    def mouse_pressed(self, event):
+        pass
+            
+    def mouse_released(self, event):
+        if (self.rect.x + self.padx < event.pos[0] and event.pos[0] < self.rect.x + self.padx + self.buttonEndTurn.get_width()
+             and self.rect.y + self.inter_line*4 + self.pady < event.pos[1] and event.pos[1] < self.rect.y + self.inter_line*4 + self.pady + self.buttonEndTurn.get_height()):
+            self.player.c.end_turn(self.player)
+            
+    def mouse_motion(self, event):
+        pass
         
     def update(self, view):
         self.check_change()
@@ -67,6 +82,7 @@ class Profile():
         view.window.blit(self.textAction, (self.rect.x + self.padx,  self.rect.y + self.inter_line*3 + self.pady))
         view.window.blit(self.action,     (self.rect.x + self.padx + self.textAction.get_width() + 10,  self.rect.y + self.inter_line*3 + self.pady))
         
+        view.window.blit(self.buttonEndTurn, (self.rect.x + self.padx,  self.rect.y + self.inter_line*4 + self.pady))
         
     
     

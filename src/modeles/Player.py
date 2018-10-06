@@ -66,9 +66,9 @@ class Player():
         self.deck_action.set_interactive(state)
         self.hand.set_interactive(state)
         
-        self.deck_normal.set_visible(state)
-        self.deck_action.set_visible(state)
-        self.hand.set_visible(state)
+        self.deck_normal.visible(state)
+        self.deck_action.visible(state)
+        self.hand.visible(state)
         
     def update(self):
         self.deck_normal.update()

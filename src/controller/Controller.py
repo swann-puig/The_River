@@ -44,10 +44,17 @@ class Controller():
         self.board.set_position(self.view.SCREEN_CENTER[0]-self.board.rect.width/2, self.view.SCREEN_CENTER[1]-self.board.rect.height/2)
         self.player.deck_normal.set_position(self.profile.rect.x - self.player.deck_normal.rect.width - 20, 0)
         self.player.deck_action.set_position(self.profile.rect.x + self.profile.rect.width + 20, 0)
-        #self.hand.set_position()
+        
+        if (mode == SINGLE):
+            self.view.resize_deck(self.player2.deck_normal)
+            self.view.resize_deck(self.player2.deck_action)
+            self.player2.deck_normal.set_position(self.profile.rect.x - self.player.deck_normal.rect.width - 20, 0)
+            self.player2.deck_action.set_position(self.profile.rect.x + self.profile.rect.width + 20, 0)
+        
         
         #------------------------------ START ------------------------------
-        self.round = self.player
+        self.round = None
+        self.end_turn(self.player2)
         self.player.start()
         self.update()
     
@@ -163,6 +170,8 @@ class Controller():
         else:
             self.round = self.player
         
+        print("end", player.name)
+        print("start", self.round.name)
         player.set_visible(False)
         self.round.set_visible(True)
         

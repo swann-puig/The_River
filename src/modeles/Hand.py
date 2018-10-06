@@ -44,6 +44,16 @@ class Hand(Graphic_object):
         for index, card in enumerate(self.group):
             card.set_position(index * self.gridx, self.y)
         
+    def visible(self, state):
+        super().visible(state)
+        for card in self.group:
+            card.visible(state)
+    
+    def set_interactive(self, state):
+        super().set_interactive(state)
+        for card in self.group:
+            card.set_interactive(state)
+        
     def update(self):
         super().update()
         if self.is_visible:

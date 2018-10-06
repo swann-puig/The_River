@@ -84,11 +84,11 @@ class Board_game(Graphic_object):
                     if (self.column[j] <= x and x < self.column[j+1]):
                         return (i,j)
     
-    def get_creature_for_equip(self, equip_card, index=False):
+    def get_creature_for_equip(self, equip_card, index_output=False):
         list = []
         for creature in self.group:
-            if creature.can_equip(equip_card):
-                if (index):
+            if creature.owner == equip_card.owner and creature.can_equip(equip_card):
+                if (index_output):
                     list.append(self.get_index(creature.rect.x, creature.rect.y))
                 else:
                     list.append(creature)
@@ -100,13 +100,13 @@ class Board_game(Graphic_object):
         if (index == None):
             return False
         if (card.infos.type == CREATURE):
-                return ((index in self.area1)
+                return ((index in (self.area1 if card.owner == self.c.player else self.area2))
                         and (not index in self.box_taken)
                         and (not index in self.non_boxe)
                         )
 
         if (card.infos.type == MAGIC):
-            return (index in self.get_creature_for_equip(card, index=True))
+            return (index in self.get_creature_for_equip(card, index_output=True))
     
     def pose_card(self, card, pos):
         if self.can_pose_card(card, pos):
@@ -120,7 +120,7 @@ class Board_game(Graphic_object):
             if (card.infos.type == MAGIC or card.infos.type == TRAP):
                 index = self.get_index(pos[0], pos[1])
                 list_creature = self.get_creature_for_equip(card)
-                list_index = self.get_creature_for_equip(card, index=True)
+                list_index = self.get_creature_for_equip(card, index_output=True)
                 list_creature[list_index.index(index)].equip(card)
                 return True
         return False
