@@ -5,6 +5,7 @@ Created on 17 sept. 2018
 '''
 from src.modeles.Deck import Deck
 from src.modeles.Hand import Hand
+from src.view.Profile import Profile
 from src.constant import PATH_IMAGE_DECK_NORMAL, PATH_IMAGE_DECK_ACTION
 
 class Player():
@@ -19,6 +20,7 @@ class Player():
         '''
         self.c = controller
         self.name = name
+        self.profile = Profile(self, self.c.view.SCREEN_WIDTH)
         self.deck_normal = Deck(controller, PATH_IMAGE_DECK_NORMAL, self, "default")
         self.deck_action = Deck(controller, PATH_IMAGE_DECK_ACTION, self, "default")
         self.hand = Hand(controller, self.c.view.SCREEN_WIDTH, 0, display_hand_card_Y)
@@ -26,10 +28,10 @@ class Player():
         self.life = 100
         self.action_point = 2
         self.color = color
-        
-    def start(self):
-        self.deck_normal.set_interactive(True)
-        self.deck_action.set_interactive(True)
+    
+    def init_position(self):
+        self.deck_normal.set_position(self.profile.rect.x - self.deck_normal.rect.width - 20, 0)
+        self.deck_action.set_position(self.profile.rect.x + self.profile.rect.width + 20, 0)
         
     def get_life(self):
         return self.life
@@ -74,6 +76,7 @@ class Player():
         self.deck_normal.update()
         self.deck_action.update()
         self.hand.update()
+        self.profile.update(self.c.view)
     
     
     

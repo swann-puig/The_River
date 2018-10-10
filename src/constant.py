@@ -20,6 +20,7 @@ PATH_IMAGE_DETAILS_M = os.path.join('images', 'magic_card.png')
 PATH_IMAGE_DETAILS_T = os.path.join('images', 'trap_card.png')
 PATH_IMAGE_DETAILS_A = os.path.join('images', 'action_card.png')
 PATH_IMAGE_HAND = os.path.join("images", "hand.png")
+PATH_IMAGE_PROFILE = os.path.join("images", "profile.png")
 PATH_CARDS_INVENTORY = os.path.join("files", "all_cards_inventory.txt")
 
 #------------------------------ SIZE ------------------------------

@@ -5,7 +5,6 @@ Created on 16 sept. 2018
 '''
 
 from src.view.View import View
-from src.view.Profile import Profile
 from src.view.Card_details import Card_details
 from src.modeles.Player import Player
 from src.modeles.Board_game import Board_game
@@ -25,7 +24,6 @@ class Controller():
         self.view = View(self);
         self.player = Player(self, "Player1 nom", 0xff0000, self.view.get_display_hand_card_Y())
         self.board = Board_game(self)
-        self.profile = Profile(self.player, self.view.SCREEN_WIDTH)
         if (mode == SINGLE):
             self.player2 = Player(self, "Player2 nom", 0xff0000, self.view.get_display_hand_card_Y())
         else:
@@ -41,30 +39,24 @@ class Controller():
         self.view.resize_deck(self.player.deck_action)
         
         #------------------------------ SET POSITION ------------------------------
+        self.player.init_position()
         self.board.set_position(self.view.SCREEN_CENTER[0]-self.board.rect.width/2, self.view.SCREEN_CENTER[1]-self.board.rect.height/2)
-        self.player.deck_normal.set_position(self.profile.rect.x - self.player.deck_normal.rect.width - 20, 0)
-        self.player.deck_action.set_position(self.profile.rect.x + self.profile.rect.width + 20, 0)
         
         if (mode == SINGLE):
+            self.player2.init_position()
             self.view.resize_deck(self.player2.deck_normal)
             self.view.resize_deck(self.player2.deck_action)
-            self.player2.deck_normal.set_position(self.profile.rect.x - self.player.deck_normal.rect.width - 20, 0)
-            self.player2.deck_action.set_position(self.profile.rect.x + self.profile.rect.width + 20, 0)
-        
         
         #------------------------------ START ------------------------------
         self.round = None
-        self.end_turn(self.player2)
-        self.player.start()
+        self.end_turn()
         self.update()
     
         
     def update(self):
         while self.view.update():
             self.board.update()
-            self.profile.update(self.view)
-            self.player.update()
-            self.player2.update()
+            self.round.update()
             if (self.details != None): self.details.update(self.view)
             self.view.display_all()
             
@@ -88,13 +80,13 @@ class Controller():
                 self.details = Card_details(card, self.view.SCREEN_WIDTH, pos[0], 0, self.view.percent_resize_details)
         
     def display_check_details(self, event):
-        for sprite in self.player.hand.group:
+        for sprite in self.round.hand.group:
             if (sprite.rect.collidepoint(event.pos)):
                 return True
         self.details = None
         
     def is_display_priority(self, card, pos):
-        cards_overlapping = self.player.hand.group.get_sprites_at(pos)
+        cards_overlapping = self.round.hand.group.get_sprites_at(pos)
         if (cards_overlapping != []):
             return cards_overlapping[-1] == card
         return False
@@ -107,12 +99,12 @@ class Controller():
     
     def cards_drawn(self, deck, cards):
         for card in cards:
-            if not self.player.hand.add_card(card):
+            if not self.round.hand.add_card(card):
                 deck.add_top(card)
             # message trop de carte en main
     
-    def get_main_player(self):
-        return self.player
+    def get_player_round(self):
+        return self.round
     
     def place_card_on_board(self, card, pos):
         if self.board.pose_card(card, pos):
@@ -142,14 +134,14 @@ class Controller():
     def select_from_hand(self, card):
         if (self.selected_from_hand[0] != None):
             if (not self.selected_from_hand[0].is_posed()):
-                self.player.hand.group.change_layer(self.selected_from_hand[0], self.selected_from_hand[1])
-        self.selected_from_hand = (card, self.player.hand.group.get_layer_of_sprite(card))
-        self.player.hand.group.move_to_front(card)
+                self.round.hand.group.change_layer(self.selected_from_hand[0], self.selected_from_hand[1])
+        self.selected_from_hand = (card, self.round.hand.group.get_layer_of_sprite(card))
+        self.round.hand.group.move_to_front(card)
         
     def deselect_from_hand(self):
         if (self.selected_from_hand[0] != None):
             if (not self.selected_from_hand[0].is_posed()):
-                self.player.hand.group.change_layer(self.selected_from_hand[0], self.selected_from_hand[1])
+                self.round.hand.group.change_layer(self.selected_from_hand[0], self.selected_from_hand[1])
         self.selected_from_hand = (None, 0)
         
     def select_from_board(self, card):
@@ -164,15 +156,15 @@ class Controller():
     def remove_move_zone(self):
         self.board.remove_move_zone()
         
-    def end_turn(self, player):
+    def end_turn(self):
         if (self.round == self.player):
             self.round = self.player2
+            self.player.set_visible(False)
+            self.round.set_visible(True)
+            
         else:
             self.round = self.player
-        
-        print("end", player.name)
-        print("start", self.round.name)
-        player.set_visible(False)
-        self.round.set_visible(True)
+            self.player2.set_visible(False)
+            self.round.set_visible(True)
         
         

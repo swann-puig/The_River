@@ -5,16 +5,19 @@ Created on 17 sept. 2018
 '''
 
 import pygame
-from src.constant import PROFILE_HEIGHT
+from src.constant import PROFILE_HEIGHT, PATH_IMAGE_PROFILE
+from src.modeles.Graphic_object import Graphic_object
 
-class Profile():
+class Profile(Graphic_object):
     '''
     classdocs
     '''
-    def __init__(self, player, SCREEN_WIDTH, background_path=None):
+    def __init__(self, player, SCREEN_WIDTH, background_path=PATH_IMAGE_PROFILE):
         '''
         Constructor
         '''
+        Graphic_object.__init__(self, player.c, background_path)
+        
         self.player = player
         self.textColor = pygame.Color("0xffffff") #RRGGBB
         #------------------------------ TITLE ------------------------------
@@ -33,10 +36,10 @@ class Profile():
         self.inter_line = self.textAction.get_height() + 6
         self.padx, self.pady = 5, 5
         
-        if (background_path == None):
-            size = self.textAction.get_width() + 100
-            self.rect = pygame.Rect(SCREEN_WIDTH/2 - size/2, 0, size, PROFILE_HEIGHT)
-        else:
+        size = self.textAction.get_width() + 100
+        self.rect = pygame.Rect(SCREEN_WIDTH/2 - size/2, 0, size, PROFILE_HEIGHT)
+        
+        if False:
             self.rect = pygame.image.load(background_path).convert_alpha()
             self.rect.x = SCREEN_WIDTH/2 - self.rect.width/2
             self.rect.y = 0
@@ -47,7 +50,8 @@ class Profile():
         self.life = None
         self.action = None
         
-        self.player.c.view.add_listen_mouse_event(self)
+        self.visible(False)
+        self.set_interactive(True)
         
     def get_width(self):
         return self.rect.width
@@ -63,7 +67,7 @@ class Profile():
     def mouse_released(self, event):
         if (self.rect.x + self.padx < event.pos[0] and event.pos[0] < self.rect.x + self.padx + self.buttonEndTurn.get_width()
              and self.rect.y + self.inter_line*4 + self.pady < event.pos[1] and event.pos[1] < self.rect.y + self.inter_line*4 + self.pady + self.buttonEndTurn.get_height()):
-            self.player.c.end_turn(self.player)
+            self.player.c.end_turn()
             
     def mouse_motion(self, event):
         pass
